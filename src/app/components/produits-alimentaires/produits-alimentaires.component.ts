@@ -9,6 +9,7 @@ import {
   ProductService,
   ProductFilterOptions,
 } from '../../core/services/product.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-produits-alimentaires',
@@ -21,6 +22,9 @@ export class ProduitsAlimentairesComponent implements OnInit {
   products: Product[] = [];
   loading = true;
   error = false;
+
+  // Track quantities for each product
+  productQuantities: { [productId: number]: number } = {};
 
   // Pagination properties
   currentPage = 0;
@@ -39,7 +43,10 @@ export class ProduitsAlimentairesComponent implements OnInit {
     size: 8,
   };
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -57,6 +64,7 @@ export class ProduitsAlimentairesComponent implements OnInit {
       .subscribe({
         next: (response: PageResponse<Product>) => {
           this.products = response.content;
+          this.initProductQuantities(this.products);
           this.totalPages = response.totalPages;
           this.totalElements = response.totalElements;
           this.isLastPage = response.last;
@@ -71,6 +79,36 @@ export class ProduitsAlimentairesComponent implements OnInit {
           this.products = [];
         },
       });
+  }
+
+  // Initialize product quantities
+  initProductQuantities(products: Product[]): void {
+    products.forEach((product) => {
+      if (product.id !== undefined) {
+        this.productQuantities[product.id] = 1;
+      }
+    });
+  }
+
+  // Methods for quantity controls
+  decreaseQuantity(productId: number): void {
+    if (this.productQuantities[productId] > 1) {
+      this.productQuantities[productId]--;
+    }
+  }
+
+  increaseQuantity(productId: number, stockQuantity: number): void {
+    // Prevent increasing beyond available stock
+    if (this.productQuantities[productId] < stockQuantity) {
+      this.productQuantities[productId]++;
+    }
+  }
+
+  // Method to add product to cart
+  addToCart(product: Product): void {
+    const quantity =
+      product.id !== undefined ? this.productQuantities[product.id] : 1;
+    this.cartService.addToCart(product, quantity);
   }
 
   applyFilters(): void {

@@ -92,11 +92,35 @@
       <div class="product-price">{{ product.price | currency : "MRU " }}</div>
       <div class="product-controls">
         <div class="quantity-controls">
-          <button class="quantity-btn">−</button>
-          <input type="text" value="1" class="quantity-input" />
-          <button class="quantity-btn">+</button>
+          <button
+            class="quantity-btn"
+            (click)="decreaseQuantity(product.id)"
+            [disabled]="product.stockQuantity === 0"
+          >
+            −
+          </button>
+          <input
+            type="text"
+            [value]="productQuantities[product.id]"
+            class="quantity-input"
+            readonly
+          />
+          <button
+            class="quantity-btn"
+            (click)="increaseQuantity(product.id, product.stockQuantity)"
+            [disabled]="
+              product.stockQuantity === 0 ||
+              productQuantities[product.id] >= product.stockQuantity
+            "
+          >
+            +
+          </button>
         </div>
-        <button class="add-to-cart" [disabled]="product.stockQuantity === 0">
+        <button
+          class="add-to-cart"
+          [disabled]="product.stockQuantity === 0"
+          (click)="addToCart(product)"
+        >
           {{ product.stockQuantity > 0 ? "Ajouter au panier" : "Indisponible" }}
         </button>
       </div>
