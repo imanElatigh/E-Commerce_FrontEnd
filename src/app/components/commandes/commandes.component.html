@@ -5,45 +5,7 @@
 
   <!-- Loading state -->
   <div class="loading-container" *ngIf="loading && !showOrderDetails">
-    <div class="loader">
-      <!-- Custom Cancel Confirmation Popup -->
-      <div
-        class="popup-overlay"
-        *ngIf="showCancelConfirmPopup"
-        (click)="closeCancelConfirmPopup()"
-      ></div>
-      <div class="popup-container" *ngIf="showCancelConfirmPopup">
-        <div class="popup">
-          <div class="popup-header">
-            <h3>Confirmation d'annulation</h3>
-            <button class="close-btn" (click)="closeCancelConfirmPopup()">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <div class="popup-body">
-            <div class="popup-icon warning">
-              <i class="fas fa-exclamation-triangle"></i>
-            </div>
-            <p>Êtes-vous sûr de vouloir annuler cette commande ?</p>
-            <p class="popup-info">
-              Cette action est irréversible. La commande sera définitivement
-              annulée.
-            </p>
-          </div>
-          <div class="popup-footer">
-            <button
-              class="popup-btn cancel-btn"
-              (click)="closeCancelConfirmPopup()"
-            >
-              Annuler
-            </button>
-            <button class="popup-btn confirm-btn" (click)="cancelOrder()">
-              Confirmer
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="loader"></div>
     <p>Chargement de vos commandes...</p>
   </div>
 
@@ -225,6 +187,40 @@
       </button>
       <button class="action-button close-button" (click)="closeOrderDetails()">
         Fermer
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Cancel Confirmation Popup - MOVED OUTSIDE any conditional container -->
+<div
+  class="popup-overlay"
+  *ngIf="showCancelConfirmPopup"
+  (click)="closeCancelConfirmPopup()"
+></div>
+<div class="popup-container" *ngIf="showCancelConfirmPopup">
+  <div class="popup">
+    <div class="popup-header">
+      <h3>Confirmation d'annulation</h3>
+      <button class="close-btn" (click)="closeCancelConfirmPopup()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="popup-body">
+      <div class="popup-icon warning">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <p>Êtes-vous sûr de vouloir annuler cette commande ?</p>
+      <p class="popup-info">
+        Cette action est irréversible. La commande sera définitivement annulée.
+      </p>
+    </div>
+    <div class="popup-footer">
+      <button class="popup-btn cancel-btn" (click)="closeCancelConfirmPopup()">
+        Annuler
+      </button>
+      <button class="popup-btn confirm-btn" (click)="cancelOrder()">
+        Confirmer
       </button>
     </div>
   </div>

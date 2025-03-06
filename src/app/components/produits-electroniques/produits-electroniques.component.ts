@@ -2,16 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
   PageResponse,
   Product,
   ProductService,
+  ProductFilterOptions,
 } from '../../core/services/product.service';
 
 @Component({
   selector: 'app-produits-electroniques',
   standalone: true,
-  imports: [FooterComponent, NavbarComponent, CommonModule],
+  imports: [FooterComponent, NavbarComponent, CommonModule, FormsModule],
   templateUrl: './produits-electroniques.component.html',
   styleUrl: './produits-electroniques.component.css',
 })
@@ -28,6 +30,15 @@ export class ProduitsElectroniquesComponent implements OnInit {
   isLastPage = false;
   isFirstPage = true;
 
+  // Filter options
+  filterOptions: ProductFilterOptions = {
+    name: '',
+    minPrice: undefined,
+    maxPrice: undefined,
+    page: 0,
+    size: 8,
+  };
+
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
@@ -36,8 +47,13 @@ export class ProduitsElectroniquesComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
+
+    // Update pagination parameters in filter options
+    this.filterOptions.page = this.currentPage;
+    this.filterOptions.size = this.pageSize;
+
     this.productService
-      .getProductsByCategory('ELECTRONIQUE', this.currentPage, this.pageSize)
+      .getProductsByCategory('ELECTRONIQUE', this.filterOptions)
       .subscribe({
         next: (response: PageResponse<Product>) => {
           this.products = response.content;
@@ -55,6 +71,24 @@ export class ProduitsElectroniquesComponent implements OnInit {
           this.products = [];
         },
       });
+  }
+
+  applyFilters(): void {
+    // Reset to first page when applying filters
+    this.currentPage = 0;
+    this.loadProducts();
+  }
+
+  resetFilters(): void {
+    this.filterOptions = {
+      name: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+      page: 0,
+      size: this.pageSize,
+    };
+    this.currentPage = 0;
+    this.loadProducts();
   }
 
   nextPage(): void {

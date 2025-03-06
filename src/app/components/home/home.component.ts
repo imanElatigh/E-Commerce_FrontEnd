@@ -6,6 +6,7 @@ import {
   Product,
   ProductService,
   PageResponse,
+  ProductFilterOptions,
 } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 
@@ -36,6 +37,16 @@ export class HomeComponent implements OnInit {
     electronique: false,
   };
 
+  // Define categories
+  categories = [
+    { id: 'ALIMENTAIRE', name: 'Alimentaire' },
+    { id: 'ELECTROMENAGER', name: 'Électroménager' },
+    { id: 'ELECTRONIQUE', name: 'Électronique' },
+  ];
+
+  // Currently selected category
+  selectedCategory: string | undefined = undefined;
+
   constructor(
     private productService: ProductService,
     private cartService: CartService
@@ -51,49 +62,86 @@ export class HomeComponent implements OnInit {
     this.electromenagerProducts = [];
     this.electroniqueProducts = [];
 
-    // Fetch Alimentaire products
-    this.productService.getProductsByCategory('ALIMENTAIRE', 0, 3).subscribe({
-      next: (response: PageResponse<Product>) => {
-        this.alimentaireProducts = response.content;
-        this.initProductQuantities(this.alimentaireProducts);
-        this.loading.alimentaire = false;
-      },
-      error: (err) => {
-        console.error('Error fetching ALIMENTAIRE products:', err);
-        this.loading.alimentaire = false;
-        this.error.alimentaire = true;
-      },
-    });
+    // Filter options object with only category and size
+    const filterOptions: ProductFilterOptions = {
+      page: 0,
+      size: 3,
+    };
 
-    // Fetch Electromenager products
-    this.productService
-      .getProductsByCategory('ELECTROMENAGER', 0, 3)
-      .subscribe({
-        next: (response: PageResponse<Product>) => {
-          this.electromenagerProducts = response.content;
-          this.initProductQuantities(this.electromenagerProducts);
-          this.loading.electromenager = false;
-        },
-        error: (err) => {
-          console.error('Error fetching ELECTROMENAGER products:', err);
-          this.loading.electromenager = false;
-          this.error.electromenager = true;
-        },
-      });
+    // Fetch Alimentaire products (only if no category selected or if ALIMENTAIRE selected)
+    if (!this.selectedCategory || this.selectedCategory === 'ALIMENTAIRE') {
+      this.loading.alimentaire = true;
+      this.productService
+        .getProductsByCategory('ALIMENTAIRE', filterOptions)
+        .subscribe({
+          next: (response: PageResponse<Product>) => {
+            this.alimentaireProducts = response.content;
+            this.initProductQuantities(this.alimentaireProducts);
+            this.loading.alimentaire = false;
+          },
+          error: (err) => {
+            console.error('Error fetching ALIMENTAIRE products:', err);
+            this.loading.alimentaire = false;
+            this.error.alimentaire = true;
+          },
+        });
+    } else {
+      // If a different category is selected, empty this array
+      this.alimentaireProducts = [];
+      this.loading.alimentaire = false;
+    }
 
-    // Fetch Electronique products
-    this.productService.getProductsByCategory('ELECTRONIQUE', 0, 3).subscribe({
-      next: (response: PageResponse<Product>) => {
-        this.electroniqueProducts = response.content;
-        this.initProductQuantities(this.electroniqueProducts);
-        this.loading.electronique = false;
-      },
-      error: (err) => {
-        console.error('Error fetching ELECTRONIQUE products:', err);
-        this.loading.electronique = false;
-        this.error.electronique = true;
-      },
-    });
+    // Fetch Electromenager products (only if no category selected or if ELECTROMENAGER selected)
+    if (!this.selectedCategory || this.selectedCategory === 'ELECTROMENAGER') {
+      this.loading.electromenager = true;
+      this.productService
+        .getProductsByCategory('ELECTROMENAGER', filterOptions)
+        .subscribe({
+          next: (response: PageResponse<Product>) => {
+            this.electromenagerProducts = response.content;
+            this.initProductQuantities(this.electromenagerProducts);
+            this.loading.electromenager = false;
+          },
+          error: (err) => {
+            console.error('Error fetching ELECTROMENAGER products:', err);
+            this.loading.electromenager = false;
+            this.error.electromenager = true;
+          },
+        });
+    } else {
+      // If a different category is selected, empty this array
+      this.electromenagerProducts = [];
+      this.loading.electromenager = false;
+    }
+
+    // Fetch Electronique products (only if no category selected or if ELECTRONIQUE selected)
+    if (!this.selectedCategory || this.selectedCategory === 'ELECTRONIQUE') {
+      this.loading.electronique = true;
+      this.productService
+        .getProductsByCategory('ELECTRONIQUE', filterOptions)
+        .subscribe({
+          next: (response: PageResponse<Product>) => {
+            this.electroniqueProducts = response.content;
+            this.initProductQuantities(this.electroniqueProducts);
+            this.loading.electronique = false;
+          },
+          error: (err) => {
+            console.error('Error fetching ELECTRONIQUE products:', err);
+            this.loading.electronique = false;
+            this.error.electronique = true;
+          },
+        });
+    } else {
+      // If a different category is selected, empty this array
+      this.electroniqueProducts = [];
+      this.loading.electronique = false;
+    }
+  }
+
+  // Method to filter by category
+  filterByCategory(category?: string): void {
+    this.selectedCategory = category;
+    this.fetchProductsByCategory();
   }
 
   // Initialize product quantities

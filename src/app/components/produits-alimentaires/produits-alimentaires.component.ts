@@ -1,19 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { FooterComponent } from "../footer/footer.component";
-import { NavbarComponent } from "../navbar/navbar.component";
+import { FooterComponent } from '../footer/footer.component';
+import { NavbarComponent } from '../navbar/navbar.component';
 import { CommonModule } from '@angular/common';
-import { PageResponse, Product, ProductService } from '../../core/services/product.service';
+import { FormsModule } from '@angular/forms';
+import {
+  PageResponse,
+  Product,
+  ProductService,
+  ProductFilterOptions,
+} from '../../core/services/product.service';
 
 @Component({
   selector: 'app-produits-alimentaires',
   standalone: true,
-  imports: [
-    FooterComponent,
-    NavbarComponent,
-    CommonModule
-  ],
+  imports: [FooterComponent, NavbarComponent, CommonModule, FormsModule],
   templateUrl: './produits-alimentaires.component.html',
-  styleUrl: './produits-alimentaires.component.css'
+  styleUrl: './produits-alimentaires.component.css',
 })
 export class ProduitsAlimentairesComponent implements OnInit {
   products: Product[] = [];
@@ -28,6 +30,15 @@ export class ProduitsAlimentairesComponent implements OnInit {
   isLastPage = false;
   isFirstPage = true;
 
+  // Filter options
+  filterOptions: ProductFilterOptions = {
+    name: '',
+    minPrice: undefined,
+    maxPrice: undefined,
+    page: 0,
+    size: 8,
+  };
+
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
@@ -36,23 +47,48 @@ export class ProduitsAlimentairesComponent implements OnInit {
 
   loadProducts(): void {
     this.loading = true;
-    this.productService.getProductsByCategory('ALIMENTAIRE', this.currentPage, this.pageSize).subscribe({
-      next: (response: PageResponse<Product>) => {
-        this.products = response.content;
-        this.totalPages = response.totalPages;
-        this.totalElements = response.totalElements;
-        this.isLastPage = response.last;
-        this.isFirstPage = response.first;
-        this.currentPage = response.number;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error fetching ALIMENTAIRE products:', err);
-        this.loading = false;
-        this.error = true;
-        this.products = [];
-      }
-    });
+
+    // Update pagination parameters in filter options
+    this.filterOptions.page = this.currentPage;
+    this.filterOptions.size = this.pageSize;
+
+    this.productService
+      .getProductsByCategory('ALIMENTAIRE', this.filterOptions)
+      .subscribe({
+        next: (response: PageResponse<Product>) => {
+          this.products = response.content;
+          this.totalPages = response.totalPages;
+          this.totalElements = response.totalElements;
+          this.isLastPage = response.last;
+          this.isFirstPage = response.first;
+          this.currentPage = response.number;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error fetching ALIMENTAIRE products:', err);
+          this.loading = false;
+          this.error = true;
+          this.products = [];
+        },
+      });
+  }
+
+  applyFilters(): void {
+    // Reset to first page when applying filters
+    this.currentPage = 0;
+    this.loadProducts();
+  }
+
+  resetFilters(): void {
+    this.filterOptions = {
+      name: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+      page: 0,
+      size: this.pageSize,
+    };
+    this.currentPage = 0;
+    this.loadProducts();
   }
 
   nextPage(): void {
@@ -102,7 +138,10 @@ export class ProduitsAlimentairesComponent implements OnInit {
       }
     }
 
-    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+    return Array.from(
+      { length: endPage - startPage + 1 },
+      (_, i) => startPage + i
+    );
   }
 
   // Helper method to check if we should show ellipsis
