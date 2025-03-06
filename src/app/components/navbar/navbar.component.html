@@ -1,0 +1,155 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <a href="#" class="logo">
+      <img src="assets/mpiag.png" alt="Company Logo" class="logo" />
+    </a>
+
+    <div class="nav-links">
+      <a href="#">Accueil</a>
+      <a href="#">Produits</a>
+      <a href="#">Catégories</a>
+      <a href="commands" *ngIf="isAuthenticated">Commandes</a>
+    </div>
+
+    <div class="nav-icons">
+      <a href="#"><i class="fas fa-search"></i></a>
+      <a href="/login"><i class="fas fa-user"></i></a>
+      <a href="#" (click)="toggleCart(); $event.preventDefault()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" *ngIf="cartItemCount > 0">{{
+          cartItemCount
+        }}</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Cart panel -->
+<div class="cart-panel" [ngClass]="{ open: isCartOpen }">
+  <!-- Cart view -->
+  <div *ngIf="!showShippingForm">
+    <div class="cart-header">
+      <h2><i class="fas fa-shopping-cart"></i> Votre panier</h2>
+      <button (click)="toggleCart()" class="close-btn">&times;</button>
+    </div>
+
+    <div class="cart-items">
+      <!-- Empty cart message -->
+      <div *ngIf="cartItems.length === 0" class="empty-cart-message">
+        <i class="fas fa-shopping-basket empty-cart-icon"></i>
+        <p>Votre panier est vide</p>
+        <button class="continue-shopping-btn" (click)="toggleCart()">
+          Continuer vos achats
+        </button>
+      </div>
+
+      <!-- Cart items -->
+      <div *ngFor="let item of cartItems" class="cart-item">
+        <div class="cart-item-image">
+          <img [src]="item.product.image" [alt]="item.product.name" />
+        </div>
+        <div class="cart-item-content">
+          <div class="cart-item-header">
+            <h3>{{ item.product.name }}</h3>
+            <div class="cart-item-total">
+              <span>{{
+                item.product.price * item.quantity | currency : "MRU "
+              }}</span>
+            </div>
+          </div>
+
+          <div class="cart-item-footer">
+            <div class="cart-item-quantity">
+              <button
+                (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                class="quantity-btn round-btn"
+              >
+                <i class="fas fa-minus"></i>
+              </button>
+              <span class="quantity-value">{{ item.quantity }}</span>
+              <button
+                (click)="updateQuantity(item.product.id, item.quantity + 1)"
+                class="quantity-btn round-btn"
+              >
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div class="cart-item-unit-price">
+              <span>{{ item.product.price | currency : "MRU " }} / unité</span>
+            </div>
+            <button
+              (click)="removeItem(item.product.id)"
+              class="remove-btn trash-btn"
+              title="Supprimer du panier"
+            >
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-total" *ngIf="cartItems.length > 0">
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Sous-total:</span>
+          <span>{{ cartTotal | currency : "MRU " }}</span>
+        </div>
+
+        <div class="summary-row total">
+          <span>Total:</span>
+          <span>{{ cartTotal | currency : "MRU " }}</span>
+        </div>
+      </div>
+      <button class="checkout-btn" (click)="proceedToCheckout()">
+        <i class="fas fa-check-circle"></i> Confirmer la commande
+      </button>
+      <button class="continue-shopping-btn" (click)="toggleCart()">
+        <i class="fas fa-arrow-left"></i> Continuer vos achats
+      </button>
+    </div>
+  </div>
+
+  <!-- Shipping Address Form -->
+  <div *ngIf="showShippingForm">
+    <div class="cart-header">
+      <h2><i class="fas fa-truck"></i> Adresse de livraison</h2>
+      <button (click)="toggleCart()" class="close-btn">&times;</button>
+    </div>
+
+    <div class="shipping-form-container">
+      <div class="shipping-info">
+        <div class="order-summary">
+          <h3>Résumé de la commande</h3>
+          <div class="summary-row">
+            <span>Nombre d'articles:</span>
+            <span>{{ cartItemCount }}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span>{{ cartTotal | currency : "MRU " }}</span>
+          </div>
+        </div>
+
+        <div class="shipping-form">
+          <label for="shipping-address">Adresse de livraison</label>
+          <textarea
+            id="shipping-address"
+            [(ngModel)]="shippingAddress"
+            placeholder="Entrez votre adresse complète de livraison"
+            rows="4"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="shipping-actions">
+        <button class="confirm-order-btn" (click)="confirmOrder()">
+          <i class="fas fa-check-circle"></i> Finaliser la commande
+        </button>
+        <button class="back-btn" (click)="backToCart()">
+          <i class="fas fa-arrow-left"></i> Retour au panier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

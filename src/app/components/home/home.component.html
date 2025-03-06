@@ -1,0 +1,229 @@
+<app-navbar></app-navbar>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+/>
+
+<div class="cards-container">
+  <!-- Large Card -->
+  <div class="card-large">
+    <img src="assets/ramadan1.png" alt="Ramadan Offer" />
+  </div>
+
+  <!-- Right Column Cards -->
+  <div class="right-column">
+    <!-- Fruits Card -->
+    <div class="card-small fruits-card">
+      <div class="discount">20% Off</div>
+      <h2>Fruits &<br />Vegetables</h2>
+      <a href="#" class="shop-collection">Shop Collection</a>
+      <img src="assets/elcto.png" alt="Fruits and Vegetables" />
+    </div>
+
+    <!-- Baked Products Card -->
+    <div class="card-small baked-card">
+      <div class="discount">15% Off</div>
+      <h2>Baked<br />Products</h2>
+      <a href="#" class="shop-collection">Shop Collection</a>
+      <img src="assets/vg3.png" alt="Baked Products" />
+    </div>
+  </div>
+</div>
+
+<h1 class="Cat">Categories</h1>
+
+<div class="categories-container">
+  <!-- Aliments (Nourriture) Card -->
+  <div class="category-card food">
+    <div class="icon-wrapper">
+      <i class="bi bi-basket2-fill" style="font-size: 40px; color: #43a047"></i>
+    </div>
+    <h3>Nourriture</h3>
+  </div>
+
+  <!-- Boissons Card -->
+  <div class="category-card drinks">
+    <div class="icon-wrapper">
+      <i class="bi bi-cup-straw" style="font-size: 40px; color: #00796b"></i>
+    </div>
+    <h3>Boissons</h3>
+  </div>
+
+  <!-- Électroniques Card -->
+  <div class="category-card electronics">
+    <div class="icon-wrapper">
+      <i class="bi bi-cpu-fill" style="font-size: 40px; color: #fb8c00"></i>
+    </div>
+    <h3>Électroniques</h3>
+  </div>
+
+  <!-- Électroménagers Card -->
+  <div class="category-card appliances">
+    <div class="icon-wrapper">
+      <i
+        class="bi bi-house-gear-fill"
+        style="font-size: 40px; color: #e91e63"
+      ></i>
+    </div>
+    <h3>Électroménagers</h3>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="header">
+    <h2 class="cat">Produits Alimentaires</h2>
+    <a href="/Produits_Alimentaires" class="view-all"
+      >Voir tous les produits →</a
+    >
+  </div>
+
+  <div class="products-grid">
+    <!-- Loading state -->
+    <div *ngIf="loading.alimentaire" class="loading-indicator">
+      Chargement des produits...
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error.alimentaire" class="error-message">
+      Impossible de charger les produits. Veuillez réessayer plus tard.
+    </div>
+
+    <!-- Product Cards -->
+    <div *ngFor="let product of alimentaireProducts" class="product-card">
+      <div class="product-image-container">
+        <img [src]="product.image" [alt]="product.name" class="product-image" />
+      </div>
+      <h2 class="product-title">{{ product.name }}</h2>
+      <div class="product-info">
+        <span class="unit-text">{{ product.stockQuantity }}</span>
+      </div>
+      <div class="product-price">{{ product.price | currency : "MRU " }}</div>
+      <div class="product-controls">
+        <div class="quantity-controls">
+          <button class="quantity-btn" (click)="decreaseQuantity(product.id)">
+            −
+          </button>
+          <input
+            type="text"
+            [value]="productQuantities[product.id]"
+            class="quantity-input"
+            readonly
+          />
+          <button class="quantity-btn" (click)="increaseQuantity(product.id)">
+            +
+          </button>
+        </div>
+        <button class="add-to-cart" (click)="addToCart(product)">
+          Ajouter au panier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="header">
+    <h2 class="cat">Produits Électroménagers</h2>
+    <a href="Produits_Electromenagers" class="view-all"
+      >Voir tous les produits →</a
+    >
+  </div>
+
+  <div class="products-grid">
+    <!-- Loading state -->
+    <div *ngIf="loading.electromenager" class="loading-indicator">
+      Chargement des produits...
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error.electromenager" class="error-message">
+      Impossible de charger les produits. Veuillez réessayer plus tard.
+    </div>
+
+    <!-- Product Cards -->
+    <div *ngFor="let product of electromenagerProducts" class="product-card">
+      <div class="product-image-container">
+        <img [src]="product.image" [alt]="product.name" class="product-image" />
+      </div>
+      <h2 class="product-title">{{ product.name }}</h2>
+      <div class="product-info">
+        <span class="unit-text">{{ product.stockQuantity }}</span>
+      </div>
+      <div class="product-price">{{ product.price | currency : "MRU " }}</div>
+      <div class="product-controls">
+        <div class="quantity-controls">
+          <button class="quantity-btn" (click)="decreaseQuantity(product.id)">
+            −
+          </button>
+          <input
+            type="text"
+            [value]="productQuantities[product.id]"
+            class="quantity-input"
+            readonly
+          />
+          <button class="quantity-btn" (click)="increaseQuantity(product.id)">
+            +
+          </button>
+        </div>
+        <button class="add-to-cart" (click)="addToCart(product)">
+          Ajouter au panier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5">
+  <div class="header">
+    <h2 class="cat">Produits Électroniques</h2>
+    <a href="Produits_Electroniques" class="view-all"
+      >Voir tous les produits →</a
+    >
+  </div>
+
+  <div class="products-grid">
+    <!-- Loading state -->
+    <div *ngIf="loading.electronique" class="loading-indicator">
+      Chargement des produits...
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error.electronique" class="error-message">
+      Impossible de charger les produits. Veuillez réessayer plus tard.
+    </div>
+
+    <!-- Product Cards -->
+    <div *ngFor="let product of electroniqueProducts" class="product-card">
+      <div class="product-image-container">
+        <img [src]="product.image" [alt]="product.name" class="product-image" />
+      </div>
+      <h2 class="product-title">{{ product.name }}</h2>
+      <div class="product-info">
+        <span class="unit-text">{{ product.stockQuantity }}</span>
+      </div>
+      <div class="product-price">{{ product.price | currency : "MRU " }}</div>
+      <div class="product-controls">
+        <div class="quantity-controls">
+          <button class="quantity-btn" (click)="decreaseQuantity(product.id)">
+            −
+          </button>
+          <input
+            type="text"
+            [value]="productQuantities[product.id]"
+            class="quantity-input"
+            readonly
+          />
+          <button class="quantity-btn" (click)="increaseQuantity(product.id)">
+            +
+          </button>
+        </div>
+        <button class="add-to-cart" (click)="addToCart(product)">
+          Ajouter au panier
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

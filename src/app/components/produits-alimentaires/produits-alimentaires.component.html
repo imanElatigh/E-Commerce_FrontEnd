@@ -1,0 +1,114 @@
+<app-navbar></app-navbar>
+
+<div class="container my-5">
+  <div class="header">
+    <h2 class="cat">Produits Alimentaire</h2>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Chargement des produits...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-message">
+    Impossible de charger les produits. Veuillez réessayer plus tard.
+  </div>
+
+  <!-- Products grid -->
+  <div *ngIf="!loading && !error" class="products-grid">
+    <!-- No products message -->
+    <div *ngIf="products.length === 0" class="no-products">
+      Aucun produit électronique disponible pour le moment.
+    </div>
+
+    <!-- Product Cards -->
+    <div *ngFor="let product of products" class="product-card">
+      <!-- Stock badge -->
+      <div *ngIf="product.stockQuantity <= 5 && product.stockQuantity > 0" class="stock-badge">
+        Plus que {{ product.stockQuantity }} en stock!
+      </div>
+      <div *ngIf="product.stockQuantity === 0" class="out-of-stock-badge">
+        Rupture de stock
+      </div>
+
+      <div class="product-image-container">
+        <img [src]="product.image" [alt]="product.name" class="product-image">
+      </div>
+      <h2 class="product-title">{{ product.name }}</h2>
+      <div class="product-info">
+        <span class="unit-text">1 UNITÉ</span>
+      </div>
+      <div class="product-price">{{ product.price | currency:'MRU ' }}</div>
+      <div class="product-controls">
+        <div class="quantity-controls">
+          <button class="quantity-btn">−</button>
+          <input type="text" value="1" class="quantity-input">
+          <button class="quantity-btn">+</button>
+        </div>
+        <button class="add-to-cart" [disabled]="product.stockQuantity === 0">
+          {{ product.stockQuantity > 0 ? 'Ajouter au panier' : 'Indisponible' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination controls -->
+  <div *ngIf="!loading && !error && totalPages > 1" class="pagination-controls">
+    <button
+      class="pagination-btn"
+      [disabled]="isFirstPage"
+      (click)="previousPage()">
+      &laquo; Précédent
+    </button>
+
+    <div class="page-numbers">
+      <!-- First page -->
+      <button
+        *ngIf="currentPage > 1"
+        class="page-number"
+        (click)="goToPage(0)">
+        1
+      </button>
+
+      <!-- Ellipsis if needed -->
+      <span *ngIf="showStartEllipsis()" class="ellipsis">...</span>
+
+      <!-- Page numbers around current page -->
+      <ng-container *ngFor="let page of getPageNumbers()">
+        <button
+          class="page-number"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)">
+          {{ page + 1 }}
+        </button>
+      </ng-container>
+
+      <!-- Ellipsis if needed -->
+      <span *ngIf="showEndEllipsis()" class="ellipsis">...</span>
+
+      <!-- Last page -->
+      <button
+        *ngIf="currentPage < totalPages - 2"
+        class="page-number"
+        (click)="goToPage(totalPages - 1)">
+        {{ totalPages }}
+      </button>
+    </div>
+
+    <button
+      class="pagination-btn"
+      [disabled]="isLastPage"
+      (click)="nextPage()">
+      Suivant &raquo;
+    </button>
+  </div>
+
+  <!-- Simple info about results -->
+  <div *ngIf="!loading && !error && products.length > 0" class="pagination-info">
+     {{ products.length }} produit(s) sur {{ totalElements }} au total
+  </div>
+</div>
+
+<app-footer></app-footer>

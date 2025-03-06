@@ -1,0 +1,72 @@
+<div class="body">
+  <div class="signup-container">
+    <div class="signup-header">
+      <a href="#" class="logo"><img src="assets/mpiag.png" alt="Logo de l'entreprise" class="logo"></a>
+      <p>Créez votre compte pour commencer vos achats</p>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-group">
+        <label for="full_name">Nom Complet</label>
+        <input type="text" id="full_name" formControlName="fullName" placeholder="Entrez votre nom complet">
+        <div *ngIf="fullName?.invalid && (fullName?.dirty || fullName?.touched)" class="validation-error">
+          <div *ngIf="fullName?.errors?.['required']">Le nom complet est obligatoire.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="email">Adresse E-mail</label>
+          <input type="email" id="email" formControlName="email" placeholder="Entrez votre adresse e-mail">
+          <div *ngIf="email?.invalid && (email?.dirty || email?.touched)" class="validation-error">
+            <div *ngIf="email?.errors?.['required']">L'adresse e-mail est obligatoire.</div>
+            <div *ngIf="email?.errors?.['email']">Format d'e-mail invalide.</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+          <label for="phone">Numéro de Téléphone</label>
+          <input type="tel" id="phone" formControlName="phone" placeholder="Entrez votre numéro de téléphone">
+          <div *ngIf="phone?.invalid && (phone?.dirty || phone?.touched)" class="validation-error">
+            <div *ngIf="phone?.errors?.['required']">Le numéro de téléphone est obligatoire.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="password">Mot de Passe</label>
+          <input type="password" id="password" formControlName="password" placeholder="Entrez votre mot de passe">
+          <div *ngIf="password?.invalid && (password?.dirty || password?.touched)" class="validation-error">
+            <div *ngIf="password?.errors?.['required']">Le mot de passe est obligatoire.</div>
+            <div *ngIf="password?.errors?.['minlength']">Le mot de passe doit contenir au moins 8 caractères.</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="flex: 1;">
+          <label for="confirm_password">Confirmez le Mot de Passe</label>
+          <input type="password" id="confirm_password" formControlName="confirm_password" placeholder="Confirmez votre mot de passe">
+          <div *ngIf="confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)" class="validation-error">
+            <div *ngIf="confirmPassword?.errors?.['required']">La confirmation du mot de passe est obligatoire.</div>
+          </div>
+          <div *ngIf="signupForm.errors?.['passwordMismatch'] && (confirmPassword?.dirty || confirmPassword?.touched)" class="validation-error">
+            Les mots de passe ne correspondent pas.
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="signup-button" [disabled]="isSubmitting">
+        <span *ngIf="!isSubmitting">S'inscrire</span>
+        <span *ngIf="isSubmitting">Traitement en cours...</span>
+      </button>
+
+      <div class="login-link">
+        Vous avez déjà un compte ? <a routerLink="/login">Connectez-vous</a>
+      </div>
+    </form>
+  </div>
+  </div>
