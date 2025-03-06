@@ -8,6 +8,7 @@ import { ProduitsElectroniquesComponent } from './components/produits-electroniq
 import { ProduitsElectromenagersComponent } from './components/produits-electromenagers/produits-electromenagers.component';
 import { CartComponent } from './components/cart/cart.component';
 import { CommandesComponent } from './components/commandes/commandes.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -20,6 +21,6 @@ export const routes: Routes = [
     component: ProduitsElectromenagersComponent,
   },
   { path: 'Produits_Electroniques', component: ProduitsElectroniquesComponent },
-  { path: 'commands', component: CommandesComponent },
+  { path: 'commands', component: CommandesComponent, canActivate: [authGuard] },
   { path: 'cart', component: CartComponent },
 ];
