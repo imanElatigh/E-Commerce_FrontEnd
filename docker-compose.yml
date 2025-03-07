@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  e-commerce-front:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "20102:20102"
+    restart: always
+    networks:
+      - e-commerce-front
+
+networks:
+  e-commerce-front:
+    driver: bridge
