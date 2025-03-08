@@ -33,7 +33,7 @@ export class SignUpComponent {
     });
   }
 
-  // Custom validator to check if passwords match
+
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirm_password')?.value;
@@ -47,7 +47,7 @@ export class SignUpComponent {
 
   onSubmit() {
     if (this.signupForm.invalid) {
-      // Mark all fields as touched to trigger validation messages
+
       Object.keys(this.signupForm.controls).forEach(key => {
         this.signupForm.get(key)?.markAsTouched();
       });
@@ -62,7 +62,7 @@ export class SignUpComponent {
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       phone: this.signupForm.value.phone,
-      role: 'USER' // Always set role to USER as specified
+      role: 'USER'
     };
 
     this.apiService.post('/api/auth/register', registerData)
@@ -70,7 +70,7 @@ export class SignUpComponent {
         next: (response: any) => {
           console.log('Registration successful:', response);
           this.isSubmitting = false;
-          // Redirect to login page after successful registration
+
           this.router.navigate(['/login']);
         },
         error: (error) => {
@@ -81,7 +81,7 @@ export class SignUpComponent {
       });
   }
 
-  // Helper methods for form validation
+
   get fullName() { return this.signupForm.get('fullName'); }
   get email() { return this.signupForm.get('email'); }
   get phone() { return this.signupForm.get('phone'); }

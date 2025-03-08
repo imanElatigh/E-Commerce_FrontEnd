@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   electromenagerProducts: Product[] = [];
   electroniqueProducts: Product[] = [];
 
-  // Track quantities for each product
+
   productQuantities: { [productId: number]: number } = {};
 
   loading = {
@@ -37,14 +37,14 @@ export class HomeComponent implements OnInit {
     electronique: false,
   };
 
-  // Define categories
+
   categories = [
     { id: 'ALIMENTAIRE', name: 'Alimentaire' },
     { id: 'ELECTROMENAGER', name: 'Électroménager' },
     { id: 'ELECTRONIQUE', name: 'Électronique' },
   ];
 
-  // Currently selected category
+
   selectedCategory: string | undefined = undefined;
 
   constructor(
@@ -57,18 +57,18 @@ export class HomeComponent implements OnInit {
   }
 
   fetchProductsByCategory(): void {
-    // Initialize arrays to prevent errors
+
     this.alimentaireProducts = [];
     this.electromenagerProducts = [];
     this.electroniqueProducts = [];
 
-    // Filter options object with only category and size
+
     const filterOptions: ProductFilterOptions = {
       page: 0,
       size: 3,
     };
 
-    // Fetch Alimentaire products (only if no category selected or if ALIMENTAIRE selected)
+
     if (!this.selectedCategory || this.selectedCategory === 'ALIMENTAIRE') {
       this.loading.alimentaire = true;
       this.productService
@@ -86,12 +86,12 @@ export class HomeComponent implements OnInit {
           },
         });
     } else {
-      // If a different category is selected, empty this array
+
       this.alimentaireProducts = [];
       this.loading.alimentaire = false;
     }
 
-    // Fetch Electromenager products (only if no category selected or if ELECTROMENAGER selected)
+
     if (!this.selectedCategory || this.selectedCategory === 'ELECTROMENAGER') {
       this.loading.electromenager = true;
       this.productService
@@ -109,12 +109,12 @@ export class HomeComponent implements OnInit {
           },
         });
     } else {
-      // If a different category is selected, empty this array
+
       this.electromenagerProducts = [];
       this.loading.electromenager = false;
     }
 
-    // Fetch Electronique products (only if no category selected or if ELECTRONIQUE selected)
+
     if (!this.selectedCategory || this.selectedCategory === 'ELECTRONIQUE') {
       this.loading.electronique = true;
       this.productService
@@ -132,19 +132,19 @@ export class HomeComponent implements OnInit {
           },
         });
     } else {
-      // If a different category is selected, empty this array
+
       this.electroniqueProducts = [];
       this.loading.electronique = false;
     }
   }
 
-  // Method to filter by category
+
   filterByCategory(category?: string): void {
     this.selectedCategory = category;
     this.fetchProductsByCategory();
   }
 
-  // Initialize product quantities
+
   initProductQuantities(products: Product[]): void {
     products.forEach((product) => {
       if (product.id !== undefined) {
@@ -153,7 +153,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Methods for quantity controls
+
   decreaseQuantity(productId: number): void {
     if (this.productQuantities[productId] > 1) {
       this.productQuantities[productId]--;
@@ -164,7 +164,7 @@ export class HomeComponent implements OnInit {
     this.productQuantities[productId]++;
   }
 
-  // Method to add product to cart
+
   addToCart(product: Product): void {
     const quantity =
       product.id !== undefined ? this.productQuantities[product.id] : 1;
