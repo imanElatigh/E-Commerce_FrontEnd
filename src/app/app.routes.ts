@@ -9,7 +9,7 @@ import { ProduitsElectromenagersComponent } from './components/produits-electrom
 import { CartComponent } from './components/cart/cart.component';
 import { CommandesComponent } from './components/commandes/commandes.component';
 import { authGuard } from './auth.guard';
-
+// routes files
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
