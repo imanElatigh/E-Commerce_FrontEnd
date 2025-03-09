@@ -3,12 +3,25 @@
     <a href="#" class="logo">
       <img src="assets/mpiag.png" alt="Company Logo" class="logo" />
     </a>
-
-    <div class="nav-links">
-      <a href="#">Accueil</a>
-      <a href="#">Categories</a>
-      <a href="#">Produits</a>
-      <a href="commands" *ngIf="isAuthenticated">Commandes</a>
+    <div class="mobile-menu" (click)="toggleMobileMenu()">
+      <div class="hamburger-icon" [ngClass]="{ open: isMobileMenuOpen }">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <div class="nav-links" [ngClass]="{ 'mobile-nav-open': isMobileMenuOpen }">
+      <a href="#" class="nav-link">Accueil</a>
+      <a href="commands" *ngIf="isAuthenticated" class="nav-link">Commandes</a>
+      <!-- Logout button for mobile view when authenticated -->
+      <a
+        href="#"
+        *ngIf="isAuthenticated"
+        class="nav-link mobile-only"
+        (click)="logout(); $event.preventDefault()"
+      >
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </a>
     </div>
 
     <div class="nav-icons">
@@ -19,6 +32,19 @@
         <span class="cart-count" *ngIf="cartItemCount > 0">{{
           cartItemCount
         }}</span>
+      </a>
+      <!-- Login/User button - Only show when NOT authenticated -->
+      <a href="login" *ngIf="!isAuthenticated">
+        <i class="fas fa-user"></i>
+      </a>
+      <!-- Logout button for desktop when authenticated -->
+      <a
+        href="#"
+        *ngIf="isAuthenticated"
+        class="logout-button desktop-only"
+        (click)="logout(); $event.preventDefault()"
+      >
+        <i class="fas fa-sign-out-alt"></i>
       </a>
     </div>
   </div>

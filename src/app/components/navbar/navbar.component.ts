@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   isCartOpen = false;
+  isMobileMenuOpen = false;
   cartItemCount = 0;
   cartItems: any[] = [];
   cartTotal = 0;
@@ -49,6 +50,9 @@ export class NavbarComponent implements OnInit {
     this.authService.authStatus$.subscribe(() => {
       this.checkAuthentication();
     });
+
+    // Add debug log for initial state
+    console.log('Initial mobile menu state:', this.isMobileMenuOpen);
   }
 
   checkAuthentication(): void {
@@ -61,6 +65,47 @@ export class NavbarComponent implements OnInit {
     this.isCartOpen = !this.isCartOpen;
     // Reset checkout state when toggling cart
     this.showShippingForm = false;
+
+    // Close mobile menu if open
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
+
+    console.log('Cart toggled, new state:', this.isCartOpen);
+  }
+
+  // Toggle mobile menu
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    console.log('Mobile menu toggled, new state:', this.isMobileMenuOpen);
+
+    // Close cart if open
+    if (this.isCartOpen && this.isMobileMenuOpen) {
+      this.isCartOpen = false;
+    }
+  }
+
+  // Logout method
+  logout(): void {
+    // Clear the token
+    localStorage.removeItem('token');
+
+    // Update authentication status
+    this.isAuthenticated = false;
+
+    // Notify auth service (if needed)
+    this.authService.logout();
+
+    // Show toast notification
+    this.toastService.success('Vous avez été déconnecté avec succès');
+
+    // Close mobile menu if open
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
+
+    // Redirect to login/home page
+    this.router.navigate(['/']);
   }
 
   removeItem(productId: number): void {
