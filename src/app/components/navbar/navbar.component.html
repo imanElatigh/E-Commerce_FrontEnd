@@ -25,18 +25,14 @@
     </div>
 
     <div class="nav-icons">
-      <a href="#"><i class="fas fa-search"></i></a>
-      <a href="login"><i class="fas fa-user"></i></a>
+      <a href="login" *ngIf="!isAuthenticated"><i class="fas fa-user"></i></a>
       <a href="#" (click)="toggleCart(); $event.preventDefault()">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count" *ngIf="cartItemCount > 0">{{
           cartItemCount
         }}</span>
       </a>
-      <!-- Login/User button - Only show when NOT authenticated -->
-      <a href="login" *ngIf="!isAuthenticated">
-        <i class="fas fa-user"></i>
-      </a>
+
       <!-- Logout button for desktop when authenticated -->
       <a
         href="#"
@@ -55,7 +51,7 @@
   <!-- Cart view -->
   <div *ngIf="!showShippingForm">
     <div class="cart-header">
-      <h2><i class="fas fa-shopping-cart"></i> Votre panier </h2>
+      <h2><i class="fas fa-shopping-cart"></i> Votre panier</h2>
       <button (click)="toggleCart()" class="close-btn">&times;</button>
     </div>
 
